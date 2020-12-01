@@ -18,6 +18,9 @@ export default {
   data: () => ({
 
   }),
+  created(){
+    this.$store.dispatch('traerDatos');
+  }
 };
 </script>
 
