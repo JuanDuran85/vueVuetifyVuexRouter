@@ -24,17 +24,30 @@
             <th class="text-left">
               Modificar
             </th>
+            <th class="text-left">
+              Completar
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in traerTareas" :key="item.name">
-            <td>{{ item.task }}</td>
-            <td><v-btn color="error" elevation="5">Eliminar</v-btn></td>
-            <td><v-btn color="primary" elevation="5">Modificar</v-btn></td>
+          <tr v-for="(item) in traerTareas" :key="item.name">
+            <td :class="[item.completado ? 'completoTask' : '']">{{ item.task }}</td>
+            <td><v-btn color="error" elevation="5" @click="eliminando(item.id)">Eliminar</v-btn></td>
+            <td><v-btn color="primary" elevation="5" @click="modificandoTask(item.id)">Modificar</v-btn></td>
+            <td><v-btn :color="item.completado ? 'green' : 'blue-grey'" elevation="5" @click="completandoTask(item)">{{item.completado ? 'Abrir' : 'Completar'}}</v-btn></td>
           </tr>
         </tbody>
       </template>
     </v-simple-table>
+
+    <div>
+      <v-snackbar v-model="snackbar" :timeout="timeout">{{ text }}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">Close
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </div>
   </v-container>
 </template>
 
@@ -43,7 +56,9 @@
     name: 'Lista',
     data: () => ({
       task: '',
-
+      snackbar: false,
+      text: 'Elemento Eliminado',
+      timeout: 2000,
     }),
     computed: {
       traerTareas(){
@@ -59,7 +74,26 @@
         } else {  
           console.log("No se puede...");
         }
+      },
+      completandoTask(item){
+        this.$store.dispatch('completadoUpdate', item);
+      },
+      modificandoTask(id){
+        this.$router.push({name: 'Modificar', params: {id}})
+      },
+      eliminando(id){
+        this.$store.dispatch('eliminarTask',id);
+        this.snackbar = true;
       }
     },
   }
 </script>
+
+<style scoped>
+  .completoTask{
+    background-color: rgba(133, 168, 64, 0.623);
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+</style>

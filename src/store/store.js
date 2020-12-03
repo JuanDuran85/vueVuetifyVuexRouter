@@ -6,11 +6,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    tareasDB: []
+    tareasDB: [],
+    uidUser: ''
   },
   getters: {
     enviandoTareas(state){
       return state.tareasDB;
+    },
+    enviarUid(state){
+      return state.uidUser;
     }
   },
   mutations: {
@@ -34,6 +38,9 @@ export default new Vuex.Store({
         task: data,
         completado: false,
       })
+    },
+    agregandoUid(state,uid){
+      state.uidUser = uid;
     }
   },
   actions: {
@@ -42,6 +49,26 @@ export default new Vuex.Store({
     },
     agregandoTarea({commit},data){
       commit('agregarTask',data);
+    },
+    completadoUpdate(context,item){
+      firebase.firestore().collection('tareas').doc(item.id).update({
+        completado: !item.completado,
+      })
+    },
+    modificandoTarea(context, data){
+      firebase.firestore().collection('tareas').doc(data.id).set({
+        idTask: data.idTask,
+        task: data.task,
+        completado: data.completado,
+      })
+    },
+    eliminarTask(context,id){
+      firebase.firestore().collection('tareas').doc(id).delete().then(()=>{
+        console.log("Eliminado");
+      })
+    },
+    agregarUid({commit},uid){
+      commit("agregandoUid",uid);
     }
   },
 })

@@ -9,7 +9,8 @@
 
       <v-toolbar-title><router-link tag="div" :to="{name: 'Home'}">Todo List</router-link></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-toolbar-title><router-link tag="div" :to="{name: 'About'}">About</router-link></v-toolbar-title>
+      <v-toolbar-title><router-link tag="div" :to="{name: 'Registro'}">Registro | </router-link></v-toolbar-title>
+      <v-toolbar-title><router-link tag="div" :to="{name: 'Login'}">| Login</router-link></v-toolbar-title>
 
       <v-btn icon>
         <v-icon>mdi-heart</v-icon>

@@ -1,19 +1,41 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import store from '../store/store';
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect: '/login'
   },
   {
-    path: '/about',
-    name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/registro',
+    name: 'Registro',
+    component: () => import(/* webpackChunkName: "Registro" */ '../views/Registro.vue')
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "Login" */ '../views/Login.vue')
+  },
+  {
+    path: '/tareas',
+    name: 'Home',
+    component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue'),
+    meta:{
+      login: true
+    }
+  },
+  {
+    path: '/modificar/:id',
+    name: 'Modificar',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Modificar.vue'),
+    props: true
+  },
+  {
+    path: '*',
+    redirect: '/login'
   }
 ]
 
@@ -21,6 +43,19 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  let userUid = store.getters.enviarUid;
+  let validado = to.matched.some(ruta => ruta.meta.login);
+
+  if (!userUid && validado) {
+    next('/login')
+  } else if (userUid && !validado) {
+    next()
+  } else {
+    next();
+  }
 })
 
 export default router
