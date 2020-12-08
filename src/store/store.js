@@ -7,14 +7,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     tareasDB: [],
-    uidUser: ''
+    user: {}
   },
   getters: {
     enviandoTareas(state){
       return state.tareasDB;
     },
-    enviarUid(state){
-      return state.uidUser;
+    enviarUser(state){
+      return state.user;
     }
   },
   mutations: {
@@ -39,8 +39,8 @@ export default new Vuex.Store({
         completado: false,
       })
     },
-    agregandoUid(state,uid){
-      state.uidUser = uid;
+    agregandoUser(state,userData){
+      state.user = userData;
     }
   },
   actions: {
@@ -67,8 +67,8 @@ export default new Vuex.Store({
         console.log("Eliminado");
       })
     },
-    agregarUid({commit},uid){
-      commit("agregandoUid",uid);
+    agregarUser({commit},user){
+      commit("agregandoUser",user);
     }
   },
 })

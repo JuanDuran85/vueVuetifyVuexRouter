@@ -10,7 +10,9 @@
       <v-toolbar-title><router-link tag="div" :to="{name: 'Home'}">Todo List</router-link></v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-title><router-link tag="div" :to="{name: 'Registro'}">Registro | </router-link></v-toolbar-title>
-      <v-toolbar-title><router-link tag="div" :to="{name: 'Login'}">| Login</router-link></v-toolbar-title>
+      <v-toolbar-title><router-link tag="div" :to="{name: 'Login'}">| Login | </router-link></v-toolbar-title>
+      <v-toolbar-title><router-link tag="div" v-if="uidUser.uid" :to="{name: 'PerfilUser'}">| Perfil | </router-link></v-toolbar-title>
+      <v-toolbar-title @click="salida">| SingOut</v-toolbar-title>
 
       <v-btn icon>
         <v-icon>mdi-heart</v-icon>
@@ -47,8 +49,26 @@
     </v-app-bar>
   </div>
 </template>
+
 <script>
+import firebase from 'firebase';
 export default {
-    name: 'Navbar'
+    name: 'Navbar',
+    computed: {
+      uidUser(){
+        return this.$store.getters.enviarUser
+      }
+    },
+    methods: {
+      salida(){
+        if (this.$store.getters.enviarUser) {
+          firebase.auth().signOut().then(() => {
+            this.$router.push('/login').catch(()=>{});
+          }).catch((error) => {
+              console.error(error);
+          });
+        } 
+      }
+    },
 }
 </script>

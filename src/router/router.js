@@ -20,6 +20,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "Login" */ '../views/Login.vue')
   },
   {
+    path: '/perfil',
+    name: 'PerfilUser',
+    component: () => import(/* webpackChunkName: "PerfilUser" */ '../views/PerfilUser.vue')
+  },
+  {
     path: '/tareas',
     name: 'Home',
     component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue'),
@@ -46,13 +51,11 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  let userUid = store.getters.enviarUid;
+  let userUid = store.getters.enviarUser.uid;
   let validado = to.matched.some(ruta => ruta.meta.login);
 
   if (!userUid && validado) {
     next('/login')
-  } else if (userUid && !validado) {
-    next()
   } else {
     next();
   }

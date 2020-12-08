@@ -24,11 +24,11 @@ export default {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log(user.displayName);
-        this.$store.dispatch('agregarUid',user.uid)
+        this.$store.dispatch('agregarUser',user)
         console.log("Si hay usuario con sesión activa");
       } else {
         console.log("No hay usuario con sesión activa...")
-        this.$store.dispatch('agregarUid','')
+        this.$store.dispatch('agregarUser','')
       }
     });
   },
