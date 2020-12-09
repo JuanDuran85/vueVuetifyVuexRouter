@@ -121,7 +121,12 @@ export default {
        }
    },
    mounted() {
-       console.log(this.$store.getters.enviarUser);
+       let datos = this.$store.getters.enviarUser;
+       let nombreCompleto = datos.displayName.split(" ");
+       this.firstname = nombreCompleto[0];
+       this.lastname = nombreCompleto[1];
+       this.photoURL = datos.photoURL;
+       this.email = datos.email;
    },
    methods: {
         editar(){
