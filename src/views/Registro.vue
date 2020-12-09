@@ -59,7 +59,6 @@ export default {
             if (this.name && this.name.length > 2 && this.email && this.password && this.password > 6) {
                 firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
                 .then(resp => { 
-                    console.log(resp.user);
                     return resp.user.updateProfile({
                         displayName: this.name
                     }).then(() => {
