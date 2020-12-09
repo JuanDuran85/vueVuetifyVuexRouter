@@ -64,7 +64,7 @@ yarn add firebase -D
 10. Si ya tienes el proyecto, selecciona: Use an existing proyect
 11. Posteriormente selecciona el proyecto en el cual tienes activo el hosting.
 12. Ahora se debe escribir el nombre del directorio donde se encontraran los archivos de produccion. En este caso se debe ingresar "dist" porque este sera el nombre de la carpeta que crea vue-cli para al producción.
-13. Indicar que si para compilar en una SFC
+13. Indicar que si para compilar en una SFC o SPA
 14. Finalizado el proceso de configuracion de firebase, se debe iniciar el proceso de produccion con vue-cli mediante el comando "build", ya sea:
     Con NPM
     ```bash
