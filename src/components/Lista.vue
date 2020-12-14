@@ -48,10 +48,33 @@
         </template>
       </v-snackbar>
     </div>
+
+    <div class="mt-5">
+      <h2>Lista de Imagenes</h2>
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th class="text-left">
+                Nombre
+              </th>
+              <th class="text-left"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item,index) in imagenes" :key="index">
+              <td><v-img lazy-src="https://picsum.photos/id/11/10/6" max-height="150" max-width="250" :src="item.url" :alt="item.name"></v-img></td>
+              <td><v-btn tile color="error" @click="borrando(item.name)"><v-icon left>mdi-delete</v-icon>Eliminar</v-btn></td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </div>
   </v-container>
 </template>
 
 <script>
+import firebase from 'firebase';
   export default {
     name: 'Lista',
     data: () => ({
@@ -59,11 +82,28 @@
       snackbar: false,
       text: 'Elemento Eliminado',
       timeout: 2000,
+      imagenes: []
     }),
     computed: {
       traerTareas(){
         return this.$store.getters.enviandoTareas;
       }
+    },
+    mounted() {
+        let storageRef = firebase.storage().ref('images/');
+        storageRef.listAll().then((res)=>{
+            res.items.forEach(element =>{
+                let imagenTodo = {
+                  name: element.name,
+                  fullPath: element.fullPath,
+                  bucket: element.bucket
+                }
+                element.getDownloadURL().then((url) => {
+                        imagenTodo.url = url;
+                        this.imagenes.push(imagenTodo);
+                }).catch((error) => console.log(error));
+            })
+        }).catch(error => console.error(error));
     },
     methods: {
       agregando(){
@@ -84,6 +124,14 @@
       eliminando(id){
         this.$store.dispatch('eliminarTask',id);
         this.snackbar = true;
+      },
+      borrando(valor){
+        firebase.storage().ref(`images/${valor}`).delete().then(() => {
+          console.log("Archivo borrado con exito");
+        }).catch((error) => {
+          console.error(error);
+        });
+
       }
     },
   }

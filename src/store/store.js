@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     tareasDB: [],
-    user: {}
+    user: {},
+    imagen: ''
   },
   getters: {
     enviandoTareas(state){
@@ -15,6 +16,9 @@ export default new Vuex.Store({
     },
     enviarUser(state){
       return state.user;
+    },
+    enviarImagen(state){
+      return state.imagen
     }
   },
   mutations: {
@@ -41,6 +45,9 @@ export default new Vuex.Store({
     },
     agregandoUser(state,userData){
       state.user = userData;
+    },
+    mutandoImagen(state,url){
+      state.imagen = url;
     }
   },
   actions: {
@@ -69,6 +76,9 @@ export default new Vuex.Store({
     },
     agregarUser({commit},user){
       commit("agregandoUser",user);
+    },
+    agregandoImagen({commit},url){
+      commit('mutandoImagen',url);
     }
   },
 })
