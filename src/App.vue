@@ -19,6 +19,7 @@ export default {
   }),
   created(){
     this.$store.dispatch('traerDatos');
+    this.$store.dispatch('traerDatosApi');
   },
   mounted() {
     firebase.auth().onAuthStateChanged((user) => {

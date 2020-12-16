@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import firebase from 'firebase';
+import { apiGet } from "@/services/apiConexion";
 
 Vue.use(Vuex)
 
@@ -8,6 +9,7 @@ export default new Vuex.Store({
   state: {
     tareasDB: [],
     user: {},
+    datosApi: []
   },
   getters: {
     enviandoTareas(state){
@@ -16,6 +18,9 @@ export default new Vuex.Store({
     enviarUser(state){
       return state.user;
     },
+    eviarDatosApi(state){
+      return state.datosApi;
+    }
   },
   mutations: {
     traerDB(state){
@@ -42,6 +47,9 @@ export default new Vuex.Store({
     agregandoUser(state,userData){
       state.user = userData;
     },
+    mutandoDatosApi(state,valores){
+      state.datosApi = valores;
+    }
   },
   actions: {
     traerDatos({commit}){
@@ -70,5 +78,9 @@ export default new Vuex.Store({
     agregarUser({commit},user){
       commit("agregandoUser",user);
     },
+    async traerDatosApi({commit}){
+      let datos = await apiGet();
+      commit('mutandoDatosApi',datos.results);
+    }
   },
 })
