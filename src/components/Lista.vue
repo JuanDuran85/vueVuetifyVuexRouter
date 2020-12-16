@@ -48,28 +48,6 @@
         </template>
       </v-snackbar>
     </div>
-
-    <div class="mt-5">
-      <h2>Lista de Imagenes</h2>
-      <v-simple-table>
-        <template v-slot:default>
-          <thead>
-            <tr>
-              <th class="text-left">
-                Nombre
-              </th>
-              <th class="text-left"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item,index) in imagenes" :key="index">
-              <td><v-img lazy-src="https://picsum.photos/id/11/10/6" max-height="150" max-width="250" :src="item.url" :alt="item.name"></v-img></td>
-              <td><v-btn tile color="error" @click="borrando(item.name)"><v-icon left>mdi-delete</v-icon>Eliminar</v-btn></td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
-    </div>
   </v-container>
 </template>
 
