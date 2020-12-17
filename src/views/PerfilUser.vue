@@ -62,11 +62,7 @@
                         </v-col>
 
                         <v-col cols="12" md="4">
-                            <v-text-field
-                                v-model="photoURL"
-                                label="Photo URL"
-                                required
-                            ></v-text-field>
+                            <v-file-input accept="image/png, image/jpeg, image/bmp" placeholder="Photo URL" prepend-icon="mdi-camera" label="Photo URL" v-model="photoURL" counter show-size></v-file-input>
                         </v-col>
 
                         <v-col cols="12" md="4">
@@ -94,9 +90,13 @@ export default {
    name: 'PerfilUser',
    data() {
        return {
+           rules: [
+                value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!',
+            ],
             mostrar: false,
             valid: false,
             photoURL: '',
+            urlImage: '',
             firstname: '',
             phone: '',
             phoneRules: [
@@ -121,27 +121,40 @@ export default {
        }
    },
    mounted() {
-       let datos = this.$store.getters.enviarUser;
-       let nombreCompleto = datos.displayName.split(" ");
-       this.firstname = nombreCompleto[0];
-       this.lastname = nombreCompleto[1];
-       this.photoURL = datos.photoURL;
-       this.email = datos.email;
+        let datos = this.$store.getters.enviarUser;
+        let nombreCompleto = datos.displayName.split(" ");
+        this.firstname = nombreCompleto[0];
+        this.lastname = nombreCompleto[1];
+        /* this.urlImage = datos.photoURL; */
+        this.email = datos.email;
    },
    methods: {
         editar(){
             this.mostrar = !this.mostrar;
         },
         guardarEdit(){
-            firebase.auth().currentUser.updateProfile({
-                displayName: this.firstname + ' ' + this.lastname,
-                photoURL: this.photoURL,
-            }).then(() => {
-                console.log("Exito...");
-            }).catch((error) => {
-                console.error("error en updateProfile");
-                console.error(error);
-            });
+            let storageRef = firebase.storage().ref('imagenes/'+this.photoURL.name);
+                let task = storageRef.put(this.photoURL);
+                task.on('state_changed',(snapshot)=>{
+                    let porcentaje = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + porcentaje + '% done');
+                }, (error) =>{
+                    console.error(error);
+                }, ()=>{
+                    console.log("Subida finalizada");
+                    storageRef.getDownloadURL().then((downloadURL) =>{
+                        console.log('File available at', downloadURL);
+                        firebase.auth().currentUser.updateProfile({
+                            displayName: this.firstname + ' ' + this.lastname,
+                            photoURL: this.urlImage,
+                        }).then(() => {
+                            console.log("Exito...");
+                        }).catch((error) => {
+                            console.error("error en updateProfile");
+                            console.error(error);
+                        });
+                    })
+                })
             firebase.auth().currentUser.updateEmail(this.email).then(() => {
                 console.log("Exito...");
             }).catch((error) =>{
